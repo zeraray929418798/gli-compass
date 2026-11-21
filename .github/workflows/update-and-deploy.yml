@@ -48,8 +48,8 @@ jobs:
       - name: Refresh Treasury yields
         run: python scripts/update_yields.py
 
-      - name: Refresh PE and Coppock
-        run: python scripts/update_pe_coppock.py
+      - name: Refresh PE ratios
+        run: python scripts/update_pe.py
 
       - name: Refresh cash / equity ratio
         run: python scripts/update_cash_equity.py
