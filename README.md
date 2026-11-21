@@ -224,7 +224,7 @@ gli-compass/
 ├─ scripts/patch_tqqq.py
 ├─ scripts/update_cash_equity.py
 ├─ scripts/update_yields.py
-├─ scripts/update_pe_coppock.py
+├─ scripts/update_pe.py
 ├─ data/raw/
 ├─ serve.py
 └─ README.md
