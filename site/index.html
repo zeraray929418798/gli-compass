@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="全球资金流动性指数 GLI 的日频市场代理版：五大模块、GLI-S 存量、GLI-M 边际、四象限与资产联动。">
+  <meta name="theme-color" content="#080d13">
+  <title>GLI COMPASS · 全球流动性日频坐标</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-grid" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">G</span><span class="brand-text"><b>GLI COMPASS</b><small>GLOBAL LIQUIDITY MONITOR</small></span></a>
+    <div class="top-right">
+      <span class="top-note">五模块 · 日频 · 市场代理版</span>
+      <span class="status-pill"><i></i>数据截至 <b id="asOf">—</b></span>
+    </div>
+  </header>
+
+  <nav class="page-nav" aria-label="页面导航">
+    <a href="#cash" class="active">现金/股票</a>
+    <a href="#yields">美债收益率</a>
+    <a href="#pe">PE 估值</a>
+    <a href="#chart">GLI 走势</a>
+    <a href="#ndx">TQQQ 对比</a>
+    <a href="#modules">模块拆解</a>
+    <a href="#quadrant">四象限</a>
+    <a href="#assets">资产联动</a>
+    <a href="#log">月度日志</a>
+    <a href="#method">方法与边界</a>
+    <span class="nav-note">STOCK / MOMENTUM / QUADRANT</span>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span>GLOBAL LIQUIDITY INDEX · DAILY PROXY</div>
+        <h1>全球流动性，<br><em>一个日频坐标。</em></h1>
+        <p>用央行政策、美元、信用、跨境资金与融资条件五组日频代理，合成 GLI-S 存量与 GLI-M 边际。它不预测市场，但把“钱是变多还是变少”画成一条线。</p>
+        <div class="hero-tags"><span>五模块 25/25/20/15/15</span><span>GLI-S</span><span>GLI-M</span><span>日频</span></div>
+      </div>
+      <div class="hero-read card">
+        <div class="hero-read-head"><span class="micro">CURRENT READING</span><span class="regime" id="regime">—</span></div>
+        <div class="gli-pair">
+          <div><span>GLI-S · 存量</span><b id="gliS">—</b><small>/ 100</small></div>
+          <div><span>GLI-M · 边际</span><b id="gliM">—</b><small>/ 100</small></div>
+        </div>
+        <div class="hero-mini">
+          <div><span>1M 变化</span><b id="oneM">—</b></div>
+          <div><span>3M 变化</span><b id="threeM">—</b></div>
+          <div><span>历史分位</span><b id="pctS">—</b></div>
+        </div>
+        <p class="hero-quad" id="heroQuad">—</p>
+      </div>
+    </section>
+
+    <div class="proxy-note">
+      <b>GLI-Market v0.1</b> · PDF 完整版需要央行资产负债表、BIS 跨境债权与 IMF COFER；本站使用可每日获取的市场代理，不把它当成“全球流动性总量”。
+    </div>
+
+    <section id="cash" class="section cash-section">
+      <div class="section-head">
+        <div><span class="kicker">00 / CASH VS EQUITY</span><h2>现金，正在变得稀缺。</h2></div>
+        <p>货币市场基金资产 + 商业银行存款，除以美国非金融企业股票市值。比例越低，说明场外现金相对股票越少。</p>
+      </div>
+      <div class="card cash-card">
+        <div class="chart-head">
+          <div class="chart-title"><span class="micro">CASH / EQUITIES RATIO</span><h3>现金 / 股票市值 <small>1975–2026</small></h3></div>
+          <div class="cash-badges">
+            <span id="cashModeBadge" class="mode-badge official">官方季度</span>
+            <span>最新 <b id="cashLatest">—</b></span>
+            <span><b id="cashAvgLabel">4Q 均值</b> <b id="cashAvg">—</b></span>
+            <span>2000 低点 <b>0.32</b></span>
+          </div>
+        </div>
+        <div class="cash-controls">
+          <div class="mode-switch" id="cashMode">
+            <button data-mode="official" class="is-active">官方季度</button>
+            <button data-mode="estimated">估算周频 <em>EST</em></button>
+          </div>
+          <div class="range-tabs" id="cashRangeTabs">
+            <button data-range="1y">1年</button>
+            <button data-range="3y">3年</button>
+            <button data-range="5y">5年</button>
+            <button data-range="10y">10年</button>
+            <button data-range="20y">20年</button>
+            <button data-range="all" class="is-active">全部</button>
+          </div>
+          <span class="wheel-hint">滚轮缩放</span>
+        </div>
+        <div class="chart-wrap cash-wrap"><canvas id="cashChart"></canvas></div>
+        <div class="line-legend"><span><i class="swatch green"></i><b id="cashLegendRatio">现金 / 股票市值</b></span><span><i class="swatch gray"></i><b id="cashLegendAvg">4 季度均值</b></span><span><i class="swatch light"></i>SPY（右轴）</span><span class="legend-note">越低 = 现金越少</span></div>
+        <div class="chart-foot"><span id="cashFoot">—</span><span id="cashFootNote">季度 · 现金 = MMF + 银行存款 · 官方 Z.1/H.8</span></div>
+      </div>
+    </section>
+
+    <section id="yields" class="section">
+      <div class="section-head">
+        <div><span class="kicker">US TREASURIES · 1994–2026</span><h2>收益率曲线，整条一起看。</h2></div>
+        <p>1 / 5 / 10 / 20 / 30 年恒定到期收益率。每条线可单独显示或隐藏；白虚线是五条期限的当日中位数。</p>
+      </div>
+      <div class="card term-card">
+        <div class="chart-head">
+          <div class="chart-title"><span class="micro">US TREASURY YIELDS</span><h3>美国国债收益率 <small>%</small></h3></div>
+          <div class="term-badges">
+            <span>10Y <b id="y10Now">—</b></span>
+            <span>中线 <b id="yMedNow">—</b></span>
+            <span>10Y 分位 <b id="y10Pct">—</b></span>
+          </div>
+        </div>
+        <div class="cash-controls">
+          <div class="range-tabs" id="yieldRangeTabs">
+            <button data-range="5y">5年</button>
+            <button data-range="10y">10年</button>
+            <button data-range="20y">20年</button>
+            <button data-range="all" class="is-active">全部</button>
+          </div>
+          <span class="wheel-hint">滚轮缩放</span>
+        </div>
+        <div class="series-toggles" id="yieldToggles">
+          <button class="series-toggle active" data-key="y1" style="--c:#6aa7ef">1Y</button>
+          <button class="series-toggle active" data-key="y5" style="--c:#55c7b2">5Y</button>
+          <button class="series-toggle active" data-key="y10" style="--c:#e3b46a">10Y</button>
+          <button class="series-toggle active" data-key="y20" style="--c:#e06767">20Y</button>
+          <button class="series-toggle active" data-key="y30" style="--c:#a897e8">30Y</button>
+          <button class="series-toggle active median" data-key="median" style="--c:#dbe2ec">中线</button>
+        </div>
+        <div class="chart-wrap term-wrap"><canvas id="yieldChart"></canvas></div>
+        <div class="chart-foot"><span id="yieldFoot">—</span><span>日频 · 恒定到期收益率 · 全样本分位</span></div>
+        <div class="table-wrap stats-mini"><table class="asset-table"><thead><tr><th>期限</th><th>当前</th><th>中位数</th><th>20分位</th><th>80分位</th><th>当前分位</th></tr></thead><tbody id="yieldStats"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="pe" class="section">
+      <div class="section-head">
+        <div><span class="kicker">VALUATION · 1980–2026</span><h2>PE 双线：滚动与席勒。</h2></div>
+        <p>S&P 500 滚动市盈率与席勒市盈率（10 年通胀调整）。虚线是 1980 年以来各自的中位数。</p>
+      </div>
+      <div class="card term-card">
+        <div class="chart-head">
+          <div class="chart-title"><span class="micro">S&P 500 VALUATION</span><h3>滚动 PE / 席勒 PE <small>x</small></h3></div>
+          <div class="term-badges">
+            <span>PE <b id="peNow">—</b></span>
+            <span>CAPE <b id="capeNow">—</b></span>
+            <span>CAPE 分位 <b id="capePct">—</b></span>
+          </div>
+        </div>
+        <div class="cash-controls">
+          <div class="range-tabs" id="peRangeTabs">
+            <button data-range="10y">10年</button>
+            <button data-range="20y">20年</button>
+            <button data-range="all" class="is-active">全部</button>
+          </div>
+          <span class="wheel-hint">滚轮缩放</span>
+        </div>
+        <div class="series-toggles" id="peToggles">
+          <button class="series-toggle active" data-key="pe" style="--c:#55c7b2">滚动 PE</button>
+          <button class="series-toggle active" data-key="cape" style="--c:#e3b46a">席勒 PE</button>
+        </div>
+        <div class="chart-wrap pe-wrap"><canvas id="peChart"></canvas></div>
+        <div class="chart-foot"><span id="peFoot">—</span><span>月度 · 虚线 = 全样本中位数</span></div>
+        <div class="table-wrap stats-mini"><table class="asset-table"><thead><tr><th>指标</th><th>当前</th><th>中位数</th><th>20分位</th><th>80分位</th><th>当前分位</th></tr></thead><tbody id="peStats"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="chart" class="section">
+      <div class="section-head">
+        <div><span class="kicker">01 / INDEX</span><h2>GLI-S 与 GLI-M</h2></div>
+        <p>GLI-S 衡量流动性存量，GLI-M 衡量过去 1/3/6 个月的变化速度。两条线同时看，才知道“水平高”与“方向好”是不是一回事。</p>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div class="chart-title"><span class="micro">DAILY INDEX</span><h3>全球流动性指数</h3></div>
+          <div class="range-tabs" id="rangeTabs">
+            <button data-range="1y">1年</button>
+            <button data-range="2y">2年</button>
+            <button data-range="3y">3年</button>
+            <button data-range="5y">5年</button>
+            <button data-range="8y">8年</button>
+            <button data-range="10y">10年</button>
+            <button data-range="all" class="is-active">全部</button>
+          </div>
+          <span class="wheel-hint">滚轮缩放</span>
+        </div>
+        <div class="legend"><span><i style="background:#e3b46a"></i>GLI-S 存量</span><span><i class="dashed" style="background:#55c7b2"></i>GLI-M 边际</span><span class="legend-note">50 = 中性</span></div>
+        <div class="chart-wrap"><canvas id="gliChart"></canvas></div>
+        <div class="chart-foot"><span id="chartFoot">—</span><span>0–100 · 50 为中性 · 日频</span></div>
+      </div>
+    </section>
+
+    <section id="ndx" class="section">
+      <div class="section-head">
+        <div><span class="kicker">02 / TQQQ · 3X</span><h2>GLI 和 TQQQ，怎么一起动</h2></div>
+        <p>两条线都做 Z-Score 标准化（均值 0 / 标准差 1），把不同量纲放到同一把尺子上；TQQQ 是 3 倍做多纳指100 的 ETF，下面的滚动相关是 GLI-S 日变化与 TQQQ 日收益的 60 日相关系数。</p>
+      </div>
+      <div class="card ndx-card">
+        <div class="chart-head">
+          <div class="chart-title"><span class="micro">GLI-S vs TQQQ</span><h3>流动性与 TQQQ <small>Z-Score 标准化 · 3倍做多纳指100</small></h3></div>
+          <div class="ndx-controls">
+            <div class="range-tabs" id="ndxRangeTabs">
+              <button data-range="1y">1年</button>
+              <button data-range="2y">2年</button>
+              <button data-range="3y">3年</button>
+              <button data-range="5y">5年</button>
+              <button data-range="8y">8年</button>
+              <button data-range="10y">10年</button>
+              <button data-range="all" class="is-active">全部</button>
+            </div>
+            <span class="wheel-hint">滚轮缩放</span>
+            <div class="ndx-badges">
+              <span>日相关 <b id="ndxDaily">—</b></span>
+              <span>月相关 <b id="ndxMonthly">—</b></span>
+              <span>60日 <b id="ndx60">—</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-wrap ndx-wrap"><canvas id="ndxChart"></canvas></div>
+        <div class="line-legend"><span><i class="swatch gold"></i>GLI-S</span><span><i class="swatch blue"></i>TQQQ</span><span>Z-Score 标准化 · 均值 0 / 标准差 1</span></div>
+        <div class="corr-wrap"><canvas id="ndxCorrChart"></canvas></div>
+        <div class="chart-foot"><span id="ndxFoot">—</span><span>上：Z-Score 标准化 · 下：60日滚动相关（-1 至 +1）</span></div>
+      </div>
+    </section>
+
+    <section id="modules" class="section">
+      <div class="section-head">
+        <div><span class="kicker">03 / MODULES</span><h2>五个模块，拆开看</h2></div>
+        <p>当前 GLI-S 相对 50 的偏离，由五个模块的 Z-Score 加权贡献。条越长，说明该模块对流动性的拉动/拖累越大。</p>
+      </div>
+      <div class="module-layout">
+        <div class="card module-card">
+          <div class="module-head"><span>模块</span><span>权重</span><span>Z-Score</span><span>贡献</span></div>
+          <div id="moduleRows"></div>
+        </div>
+        <div class="card note-card">
+          <span class="micro">FORMULA</span>
+          <h3>GLI-S = 50 + 10 × Σ wᵢ·Zᵢ</h3>
+          <p>每个模块内部先对代理变量做 5 年滚动 Z-Score，截断在 ±3，再按 25/25/20/15/15 加权。</p>
+          <div class="note-list" id="moduleNotes"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quadrant" class="section">
+      <div class="section-head">
+        <div><span class="kicker">04 / QUADRANT</span><h2>存量和边际，四象限</h2></div>
+        <p>横轴 GLI-S，纵轴 GLI-M。以 50 为分界，分成全面宽松、高位收缩、流动性复苏、低位收缩四个状态。</p>
+      </div>
+      <div class="quad-layout">
+        <div class="card quad-card">
+          <div class="quad-labels"><span class="q-tl">高位收缩</span><span class="q-tr">全面宽松</span><span class="q-bl">低位收缩</span><span class="q-br">流动性复苏</span></div>
+          <div class="quad-chart"><canvas id="quadChart"></canvas></div>
+          <div class="chart-foot"><span id="quadFoot">—</span><span>近 2 年轨迹 · 大点 = 当前</span></div>
+        </div>
+        <div class="card quad-read">
+          <span class="micro">CURRENT QUADRANT</span>
+          <h3 id="quadTitle">—</h3>
+          <p id="quadBody">—</p>
+          <div class="quad-stats">
+            <div><span>GLI-S</span><b id="quadS">—</b></div>
+            <div><span>GLI-M</span><b id="quadM">—</b></div>
+            <div><span>1M</span><b id="quad1M">—</b></div>
+            <div><span>3M</span><b id="quad3M">—</b></div>
+          </div>
+          <p class="quad-note">四象限的“高/低”是相对 50 的简化刻度；完整版应按历史分布动态确定。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="assets" class="section">
+      <div class="section-head">
+        <div><span class="kicker">05 / ASSETS</span><h2>流动性传到资产上了吗</h2></div>
+        <p>近一年表现，以及各资产日收益与 GLI-S 日变化的相关系数。相关性只描述同向程度，不是因果。</p>
+      </div>
+      <div class="card table-card">
+        <div class="table-wrap">
+          <table class="asset-table">
+            <thead><tr><th>资产</th><th>最新</th><th>近1年</th><th>与 GLI-S 变化的相关性</th><th>读法</th></tr></thead>
+            <tbody id="assetBody"></tbody>
+          </table>
+        </div>
+        <div class="chart-foot"><span>相关性基于共同交易日的日收益 / 收益率日变化</span><span>正相关 = 流动性改善时更常上涨</span></div>
+      </div>
+    </section>
+
+    <section id="log" class="section">
+      <div class="section-head">
+        <div><span class="kicker">06 / MONTHLY LOG</span><h2>月度读数日志</h2></div>
+        <p>每月最后一个交易日的 GLI-S / GLI-M，以及 TQQQ 当月涨跌。用来回看状态切换，不用来做事后择时。</p>
+      </div>
+      <div class="card table-card">
+        <div class="table-wrap">
+          <table class="asset-table monthly-table">
+            <thead><tr><th>月份</th><th>GLI-S</th><th>GLI-M</th><th>状态</th><th>TQQQ 月收益</th><th>GLI-S 1M 变化</th></tr></thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+        <div class="chart-foot"><span id="logFoot">—</span><span>月末值 · 共 30 个月 · 颜色只表示方向</span></div>
+      </div>
+    </section>
+
+    <section id="method" class="section method">
+      <div class="section-head">
+        <div><span class="kicker">07 / METHOD</span><h2>方法与边界</h2></div>
+        <p>这是一个可复现的日频代理，不是把五家央行资产负债表加总。数据缺口必须公开，而不是藏起来。</p>
+      </div>
+      <div class="method-grid">
+        <div class="card method-card">
+          <div class="card-head"><div><span class="micro">MODULES</span><h3>五个模块的代理</h3></div></div>
+          <div class="note-list" id="methodModules"></div>
+        </div>
+        <div class="card method-card">
+          <div class="card-head"><div><span class="micro">DATA</span><h3>数据来源</h3></div></div>
+          <div class="source-list" id="sourceList"></div>
+          <div class="method-note" id="audit">—</div>
+        </div>
+      </div>
+      <div class="warning">
+        <b>重要</b>：PDF 的完整 GLI 需要央行资产、银行信用、BIS/IMF 跨境数据；免费日频源无法完整覆盖。本站把五模块映射到日频市场代理，GLI-S 从 2012-04 开始、GLI-M 从 2018 年开始（受 5 年滚动 Z-Score 限制），适合跟踪“流动性方向”，不适合引用为官方流动性总量。
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div><span class="brand-mark small">G</span><span><b>GLI COMPASS</b><small>Liquidity, in one line.</small></span></div>
+    <span>© 2026 GLI COMPASS · 不构成投资建议</span>
+  </footer>
+
+  <script src="data/cash_equity.js"></script>
+  <script src="data/yields.js"></script>
+  <script src="data/pe.js"></script>
+  <script src="data/gli.js"></script>
+  <script src="assets/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
